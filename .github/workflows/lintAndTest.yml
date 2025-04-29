@@ -1,0 +1,29 @@
+name: Execute Lint and Tests
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  lintAndTest:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: '${{ runner.os }}-node-${{ hashFiles(''**/package-lock.json'') }}'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Run test
+      run: npm test
